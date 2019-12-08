@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -94,80 +94,102 @@ module.exports = require("react");
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = require("styled-components");
+module.exports = require("fs");
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-var _react = _interopRequireDefault(__webpack_require__(0));
-
-var _express = _interopRequireDefault(__webpack_require__(3));
-
-var _fs = _interopRequireDefault(__webpack_require__(4));
-
-var _path = _interopRequireDefault(__webpack_require__(5));
-
-var _server = __webpack_require__(6);
-
-var url = _interopRequireWildcard(__webpack_require__(7));
-
-var _styledComponents = __webpack_require__(1);
-
-var _App = _interopRequireDefault(__webpack_require__(8));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var app = (0, _express["default"])();
-
-var html = _fs["default"].readFileSync(_path["default"].resolve(__dirname, "../dist/index.html"), "utf8");
-
-app.use("/dist", _express["default"]["static"]("dist"));
-app.get("/favicon.ico", function (req, res) {
-  return res.sendStatus(204);
-});
-app.get("*", function (req, res) {
-  var parsedUrl = url.parse(req.url, true);
-  var page = parsedUrl.pathname ? parsedUrl.pathname.substr(1) : "home";
-  var sheet = new _styledComponents.ServerStyleSheet();
-  var renderString = (0, _server.renderToString)(sheet.collectStyles(_react["default"].createElement(_App["default"], {
-    page: "home"
-  })));
-  var styles = sheet.getStyleTags();
-  var initialData = {
-    page: page
-  };
-  var result = html.replace('<div id="root"></div>', "<div id=\"root\">".concat(renderString, "<div>")).replace("__DATA_FROM_SERVER__", JSON.stringify(initialData)).replace("__STYLE_FROM_SERVER__", styles);
-  res.send(result);
-});
-app.listen(3000);
+module.exports = require("path");
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-module.exports = require("express");
+module.exports = require("styled-components");
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = require("fs");
+"use strict";
+
+
+var _fs = _interopRequireDefault(__webpack_require__(1));
+
+var _path = _interopRequireDefault(__webpack_require__(2));
+
+var _common = __webpack_require__(5);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _iteratorNormalCompletion = true;
+var _didIteratorError = false;
+var _iteratorError = undefined;
+
+try {
+  for (var _iterator = _common.prerenderPages[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    var page = _step.value;
+    var result = (0, _common.renderPages)(page);
+
+    _fs["default"].writeFileSync(_path["default"].resolve(__dirname, "../dist/".concat(page, ".html")), result);
+  }
+} catch (err) {
+  _didIteratorError = true;
+  _iteratorError = err;
+} finally {
+  try {
+    if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+      _iterator["return"]();
+    }
+  } finally {
+    if (_didIteratorError) {
+      throw _iteratorError;
+    }
+  }
+}
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = require("path");
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderPages = renderPages;
+exports.prerenderPages = void 0;
+
+var _fs = _interopRequireDefault(__webpack_require__(1));
+
+var _path = _interopRequireDefault(__webpack_require__(2));
+
+var _server = __webpack_require__(6);
+
+var _react = _interopRequireDefault(__webpack_require__(0));
+
+var _App = _interopRequireDefault(__webpack_require__(7));
+
+var _styledComponents = __webpack_require__(3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var html = _fs["default"].readFileSync(_path["default"].resolve(__dirname, "../dist/index.html"), "utf-8");
+
+var prerenderPages = ["home"];
+exports.prerenderPages = prerenderPages;
+
+function renderPages(page) {
+  var sheet = new _styledComponents.ServerStyleSheet();
+  var renderString = (0, _server.renderToString)(sheet.collectStyles(_react["default"].createElement(_App["default"], {
+    page: page
+  })));
+  var styles = sheet.getStyleTags();
+  var result = html.replace('<div id="root"></div>', "<div id=\"root\">".concat(renderString, "</div>")).replace("__STYLE_FROM_SERVER__", styles);
+  return result;
+}
 
 /***/ }),
 /* 6 */
@@ -177,12 +199,6 @@ module.exports = require("react-dom/server");
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports) {
-
-module.exports = require("url");
-
-/***/ }),
-/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -193,15 +209,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _styledComponents = _interopRequireDefault(__webpack_require__(1));
+var _styledComponents = _interopRequireDefault(__webpack_require__(3));
 
 var _react = _interopRequireDefault(__webpack_require__(0));
 
-var _Home = _interopRequireDefault(__webpack_require__(9));
+var _Home = _interopRequireDefault(__webpack_require__(8));
 
-var _About = _interopRequireDefault(__webpack_require__(10));
+var _About = _interopRequireDefault(__webpack_require__(9));
 
-var _icon = _interopRequireDefault(__webpack_require__(11));
+var _icon = _interopRequireDefault(__webpack_require__(10));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -239,6 +255,16 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 var Container = _styledComponents["default"].div(_templateObject());
 
+function fetchUsername() {
+  var usernames = ["mike", "june", "jamie"];
+  return new Promise(function (resolve) {
+    var username = usernames[Math.floor(Math.random() * 3)];
+    setTimeout(function () {
+      return resolve(username);
+    }, 100);
+  });
+}
+
 var App =
 /*#__PURE__*/
 function (_React$Component) {
@@ -258,7 +284,8 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(App)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_this), "state", {
-      page: _this.props.page
+      page: _this.props.page,
+      username: null
     });
 
     _defineProperty(_assertThisInitialized(_this), "onChangePage", function (e) {
@@ -283,11 +310,19 @@ function (_React$Component) {
           page: event.state
         });
       };
+
+      fetchUsername().then(function (username) {
+        return _this2.setState({
+          username: username
+        });
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      var page = this.state.page;
+      var _this$state = this.state,
+          page = _this$state.page,
+          username = _this$state.username;
       var PageComponent = page === "home" ? _Home["default"] : _About["default"];
       return _react["default"].createElement(Container, null, _react["default"].createElement("button", {
         "data-page": "home",
@@ -297,7 +332,9 @@ function (_React$Component) {
         onClick: this.onChangePage
       }, "About"), _react["default"].createElement("img", {
         src: _icon["default"]
-      }), _react["default"].createElement(PageComponent, null));
+      }), _react["default"].createElement(PageComponent, {
+        username: username
+      }));
     }
   }]);
 
@@ -308,7 +345,7 @@ var _default = App;
 exports["default"] = _default;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -323,15 +360,16 @@ var _react = _interopRequireDefault(__webpack_require__(0));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var Home = function Home() {
-  return _react["default"].createElement("div", null, _react["default"].createElement("h3", null, "This is home page"));
+var Home = function Home(_ref) {
+  var username = _ref.username;
+  return _react["default"].createElement("div", null, _react["default"].createElement("h3", null, "This is home page"), username && _react["default"].createElement("p", null, "".concat(username, " \uB2D8 \uC548\uB155\uD558\uC138\uC694")));
 };
 
 var _default = Home;
 exports["default"] = _default;
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -354,7 +392,7 @@ var _default = About;
 exports["default"] = _default;
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
